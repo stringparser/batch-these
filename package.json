@@ -1,0 +1,38 @@
+{
+  "name": "batch-these",
+  "version": "0.1.0",
+  "description": "batch stdout writes with ease",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stringparser/batch-these"
+  },
+  "keywords": [
+    "stdout",
+    "batch",
+    "module writes"
+  ],
+  "author": "Javier Carrillo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stringparser/batch-these/issues"
+  },
+  "homepage": "https://github.com/stringparser/batch-these",
+  "devDependencies": {
+    "jshint": "^2.5.5",
+    "jshint-stylish": "^1.0.0",
+    "mocha": "^1.21.4",
+    "should": "^4.0.4"
+  },
+  "dependencies": {
+    "utils-type": "^0.1.31"
+  },
+  "scripts": {
+    "lint": "jshint lib index.js --reporter node_modules/jshint-stylish/stylish.js --exclude node_modules",
+    "test": "npm run-script lint && mocha --reporter spec",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+  }
+}
