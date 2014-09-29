@@ -11,7 +11,7 @@ describe('batch-these', function(){
   testFiles.forEach(function(testFile){
     var suite = testFile.match(/\w+/)[0];
     describe(suite, function(){
-      require(testFile)(batchThese);
+      require('./'+testFile)(batchThese);
     });
 
   });
