@@ -1,6 +1,6 @@
 {
   "name": "batch-these",
-  "version": "0.7.0",
+  "version": "0.7.5",
   "description": "batch with ease",
   "main": "index.js",
   "engines": {
@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "callsite-tracker": "^1.0.16",
-    "lodash.merge": "^2.4.1",
     "stdout-monkey": "^1.0.20",
     "utils-type": "^0.1.33"
   },
