@@ -75,38 +75,44 @@ Done with Mr. Blonde in 105 ms, Mr. Blue in 110 ms, Mr. Brown in 123 ms, Mr. Ora
 
 #### batch.these(data, [callback])
 
+`callback`
+  - type: function  
+  - default: none
+
 `data`
-  type: none.
+  - type: none
 
   The data to be batched.
 
-`callback`
-  type: function
-  default: none
+  It will be passed to the `callback` when the time comes as an `array`.
 
-  It will be pass to the `callback` when the time comes as an array.
+#### batch.wait([ms])
 
-#### batch.wait([miliseconds])
-
-type: `number`
-default: `0` miliseconds
+ms
+ - type: `number`
+ - default: `0` miliseconds
 
 Time in `ms` to wait in between batches.
 
-#### batch.origin([function])
+#### batch.origin([handle])
 
-type: `function`
-default: `console.log`
+handle
+ - type: `function`
+ - default: `console.log`
 
-Function to track down for the batches. Internally is using [callsite-tracker](https://github.com/stringparser/callsite-tracker) to get only one stack trace frame keeping the overhead to a minium.
+Function to track down for the batches. Internally is using [callsite-tracker](https://github.com/stringparser/callsite-tracker) to get only one stack trace frame keeping the overhead to a minimum.
 
 ### how it works
 
-The module uses 1 *stacktrace* frame to figure out *the exact location* of the `callback`. Based on that, a batch is stored. For each *location* a batch will kept waiting for new data input using a timer. The time to be waiting is set using `batch.wait([miliseconds])` time.
+The module uses 1 *stacktrace* frame to figure out *the exact location* of the `callback`. Based on that, a batch is stored. For each *location* a batch will kept waiting for new data input using a timer.
 
-NOTE: this package is devised to work hand in hand with `process.stdout.write`. That is, the package [*monkeypatches*](https://github.com/stringparser/stdout-monkey) `stdout` in order feed from its data.
+The time to be waiting is set with `batch.wait([ms])` time.
 
-Though it would need some changes as it is, it should work with any other function call. With a prior patched, that is.
+The origin from which the *stacktrace* will be taken is set with `batch.origin([handle])`
+
+NOTE: the package is devised to work hand in hand with `process.stdout.write`. That is, the package [*monkeypatches*](https://github.com/stringparser/stdout-monkey) `stdout` in order feed from its data.
+
+Though it would need some changes as it is, it should work with any other function call. With a prior patch, that is.
 
 ## why
 
