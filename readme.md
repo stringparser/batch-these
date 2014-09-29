@@ -14,7 +14,7 @@ batch data with ease
 
 ```js
 var batch = require('batch-these');
-    batch.wait = 30;
+    batch.wait(30);
 
 process.on('stuff-started', function(e){
   var batched = e.name;
