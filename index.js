@@ -62,6 +62,8 @@ function batchThese(str, callback){
       batch = { };
     }
   }, wait);
+
+  return exports;
 }
 
 // patch stdout with the batched version
@@ -80,8 +82,10 @@ exports.these = batchThese;
 
 exports.origin = function (_origin){
   origin = type(_origin).function || console.log;
+  return exports;
 };
 
 exports.wait = function(_wait){
   wait = type( Math.abs(_wait) ).integer || 0;
+  return exports;
 };
