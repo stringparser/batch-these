@@ -4,7 +4,7 @@
 [<img alt="NPM version" src="http://img.shields.io/npm/v/batch-these.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/batch-these)
 <br><br>
 
-batch with ease.
+batch data with ease
 <br>
 
 ## install
@@ -93,7 +93,7 @@ Time to wait in between batches.
 type: `function`
 default: `console.log`
 
-Function to track down for the batches.
+Function to track down for the batches. Internally is using [callsite-tracker](https://github.com/stringparser/callsite-tracker) to get only one stack trace frame.
 
 ### how it works
 
