@@ -43,7 +43,7 @@ dogs.forEach(function(name, index){
       time : time
     });
 
-    var rand += Math.floor(Math.random()*100);
+    var rand = Math.floor(Math.random()*100);
     setTimeout(function(){
       process.emit('stuff-done', {
         name : name,
