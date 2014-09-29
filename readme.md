@@ -3,7 +3,6 @@
 [<img alt="build" src="http://img.shields.io/travis/stringparser/batch-these/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/batch-these/builds)
 [<img alt="NPM version" src="http://img.shields.io/npm/v/batch-these.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/batch-these)
 <br><br>
-
 batch data with ease
 <br>
 
@@ -37,36 +36,37 @@ var dogs = [
   'White','Brown', 'Blonde','Orange'
 ];
 
-dogs.forEach(function(name){
+dogs.forEach(function(name, index){
   var time = process.hrtime();
-  var rand = Math.floor(Math.random()*100);
-
   setTimeout(function(){
     process.emit('stuff-started', {
       name : name,
       time : time
     });
 
-    rand += Math.floor(Math.random()*100);
+    var rand += Math.floor(Math.random()*100);
     setTimeout(function(){
       process.emit('stuff-done', {
         name : name,
         time : process.hrtime(time)[1]/1000000
       });
     }, rand);
-  }, rand);
+  }, (index + 1)*10);
 });
 
 ```
 which will output something similar to
 
 ```shell
-Started  Joe, Pink, White
-Done with Mr. Pink in 34 ms
-Started  Blue, Brown, Eddie, Orange, Blonde
-Done with Mr. White in 101 ms, Mr. Joe in 121 ms
-Done with Mr. Orange in 178 ms, Mr. Brown in 186 ms, Mr. Eddie in 202 ms
-Done with Mr. Blue in 248 ms, Mr. Blonde in 257 ms
+Started  Blue, Pink, Eddie, Joe
+Done with Mr. Joe in 46 ms
+Started  White
+Done with Mr. White in 50 ms
+Started  Brown, Blonde
+Done with Mr. Pink in 72 ms
+Started  Orange
+Done with Mr. Blonde in 105 ms, Mr. Blue in 110 ms, Mr. Brown in 123 ms, Mr. Orange in 125 ms, Mr. Eddie in 128 ms
+
 ```
 
 ### documentation
@@ -80,10 +80,14 @@ and two `exports` properties
   - `batch.wait`
   - `batch.origin`
 
+#### batch.these(data, callback)
+
+`data`: the data to be batched. It will be pass to the `callback` when the time comes as an array.
+
 #### batch.wait
 
 type: `number`
-default: `1 ms`
+default: `0`
 
 Time to wait in between batches.
 

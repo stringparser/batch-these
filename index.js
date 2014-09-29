@@ -10,24 +10,23 @@ exports = module.exports = { };
 
 var util = require('./lib/util');
 var write = util.write;
-// var debug = util.debug;
+var debug = util.debug;
 
 var batch = { };
+var wait = 0, origin = console.log;
 
 function batchThese(str, callback){
 
-  callback = type(callback).function || false;
-
-  var wait = type(exports.wait).integer > 0 ? exports.wait : 1;
-  var origin = callback ? batchThese : exports.origin || console.log;
-
-  var caller = track(origin);
+  callback = type(callback).function;
+  var caller = track(callback ? batchThese : origin);
 
   batch.module = batch.module || caller.module;
   batch.location = batch.location || caller.location;
 
-  clearTimeout(batch.timer);
-  delete batch.timer;
+  if( batch.timer ){
+    clearTimeout(batch.timer);
+    delete batch.timer;
+  }
 
   var waiting = callback
      ? batch.location === caller.location
@@ -41,11 +40,11 @@ function batchThese(str, callback){
     batch.handle = callback;
 
     batch.data.push(str);
-    // debug('waiting...', batch);
+    debug('waiting...', batch);
 
   } else {
 
-    // debug('direct write', batch);
+    debug('direct write', batch);
     write(batch, monkey);
     batch = {
         module : caller.module,
@@ -55,23 +54,34 @@ function batchThese(str, callback){
     };
   }
 
+  // keep a timer anyway
   batch.timer = setTimeout(function(){
     if( batch.data ){
-      // debug('timer kicks', batch);
+      debug('timer kicks', batch);
       write(batch, monkey);
       batch = { };
     }
   }, wait);
 }
 
+// patch stdout with the batched version
 monkey.patch(batchThese);
 
+// it can happen
 process.once('exit', function(){
-  //var sink;
+  var sink;
   if(batch.data){
-    //sink = ! debug.// debug || console.log('exit', batch);
+    sink = ! debug.debug || console.log('exit', batch);
     write(batch, monkey);
   }
 });
 
 exports.these = batchThese;
+
+exports.origin = function (_origin){
+  origin = type(_origin).function || console.log;
+};
+
+exports.wait = function(_wait){
+  wait = type( Math.abs(_wait) ).integer || 0;
+};
