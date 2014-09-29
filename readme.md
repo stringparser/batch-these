@@ -58,7 +58,6 @@ dogs.forEach(function(name){
 });
 
 ```
-
 which will output something similar to
 
 ```shell
@@ -97,7 +96,7 @@ Function to track down for the batches. Internally is using [callsite-tracker](h
 
 ### how it works
 
-The module uses 1 stacktrace frame to figure out *the exact location* of the function and based on that a batch is stored. It will keep waiting to have
+The module uses 1 *stacktrace* frame to figure out *the exact location* of the function and based on that a batch is stored. It will keep waiting to have
 new data input with a timer set for the `batch.wait` time.
 
 Out of the box is devised to work hand in hand with `stdout.write` and, though it would need some changes as it is, it should work with any other function call.
