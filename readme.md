@@ -1,4 +1,4 @@
-# batch-these [<img alt="progressed.io" src="http://progressed.io/bar/99" align="right"/>](https://github.com/fehmicansaglam/progressed.io)
+# batch-these [<img alt="progressed.io" src="http://progressed.io/bar/75" align="right"/>](https://github.com/fehmicansaglam/progressed.io)
 
 [<img alt="build" src="http://img.shields.io/travis/stringparser/batch-these/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/batch-these/builds)
 [<img alt="NPM version" src="http://img.shields.io/npm/v/batch-these.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/batch-these)
@@ -104,7 +104,7 @@ Out of the box is devised to work hand in hand with `stdout.write` and, though i
 
 ## why
 
-You would like to keep `stdout` writes to the bare minimum in an non intrusive way. 
+You would like to keep `stdout` writes to the bare minimum.
 
 ## test
 
