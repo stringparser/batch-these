@@ -73,37 +73,40 @@ Done with Mr. Blonde in 105 ms, Mr. Blue in 110 ms, Mr. Brown in 123 ms, Mr. Ora
 
 `var batch = require('batch-these')`
 
-Has only one method
-  - `batch.these`
+#### batch.these(data, [callback])
 
-and two `exports` properties
-  - `batch.wait`
-  - `batch.origin`
+`data`
+  type: none.
 
-#### batch.these(data, callback)
+  The data to be batched.
 
-`data`: the data to be batched. It will be pass to the `callback` when the time comes as an array.
+`callback`
+  type: function
+  default: none
 
-#### batch.wait
+  It will be pass to the `callback` when the time comes as an array.
+
+#### batch.wait([miliseconds])
 
 type: `number`
-default: `0`
+default: `0` miliseconds
 
-Time to wait in between batches.
+Time in `ms` to wait in between batches.
 
-#### batch.origin
+#### batch.origin([function])
 
 type: `function`
 default: `console.log`
 
-Function to track down for the batches. Internally is using [callsite-tracker](https://github.com/stringparser/callsite-tracker) to get only one stack trace frame.
+Function to track down for the batches. Internally is using [callsite-tracker](https://github.com/stringparser/callsite-tracker) to get only one stack trace frame keeping the overhead to a minium.
 
 ### how it works
 
-The module uses 1 *stacktrace* frame to figure out *the exact location* of the function and based on that a batch is stored. It will keep waiting to have
-new data input with a timer set for the `batch.wait` time.
+The module uses 1 *stacktrace* frame to figure out *the exact location* of the `callback`. Based on that, a batch is stored. For each *location* a batch will kept waiting for new data input using a timer. The time to be waiting is set using `batch.wait([miliseconds])` time.
 
-Out of the box is devised to work hand in hand with `stdout.write` and, though it would need some changes as it is, it should work with any other function call.
+NOTE: this package is devised to work hand in hand with `process.stdout.write`. That is, the package [*monkeypatches*](https://github.com/stringparser/stdout-monkey) `stdout` in order feed from its data.
+
+Though it would need some changes as it is, it should work with any other function call. With a prior patched, that is.
 
 ## why
 
