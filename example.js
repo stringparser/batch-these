@@ -1,7 +1,7 @@
 'use strict';
 
 var batch = require('./.');
-    batch.wait(30);
+    batch.wait(12);
 
 process.on('stuff-started', function(e){
   var batched = e.name;

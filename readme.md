@@ -14,7 +14,7 @@ batch data with ease
 
 ```js
 var batch = require('batch-these');
-    batch.wait(30);
+    batch.wait(12);
 
 process.on('stuff-started', function(e){
   var batched = e.name;
@@ -24,7 +24,6 @@ process.on('stuff-started', function(e){
 });
 
 process.on('stuff-done', function(e){
-
   var batched = e.name + ' in ' + Math.floor(e.time) + ' ms';
   batch.these(batched, function(batch){
     console.log('Done with Mr.', batch.join(', Mr. ') );
@@ -51,22 +50,21 @@ dogs.forEach(function(name, index){
         time : process.hrtime(time)[1]/1000000
       });
     }, rand);
-  }, (index + 1)*10);
+  }, (index + 1)*11);
 });
 
 ```
 which will output something similar to
 
-```shell
-Started  Blue, Pink, Eddie, Joe
-Done with Mr. Joe in 46 ms
-Started  White
-Done with Mr. White in 50 ms
+```
+Started  Blue, Pink, Eddie, Joe, White
+Done with Mr. Pink in 51 ms
 Started  Brown, Blonde
-Done with Mr. Pink in 72 ms
+Done with Mr. Blue in 76 ms
 Started  Orange
-Done with Mr. Blonde in 105 ms, Mr. Blue in 110 ms, Mr. Brown in 123 ms, Mr. Orange in 125 ms, Mr. Eddie in 128 ms
-
+Done with Mr. Brown in 89 ms, Mr. Blonde in 96 ms
+Done with Mr. Eddie in 112 ms, Mr. Joe in 112 ms, Mr. White in 118 ms
+Done with Mr. Orange in 179 ms
 ```
 
 ### documentation
@@ -110,7 +108,7 @@ The time to be waiting is set with `batch.wait([ms])` time.
 
 The origin from which the *stacktrace* will be taken is set with `batch.origin([handle])`
 
-NOTE: the package is devised to work hand in hand with `process.stdout.write`. That is, the package [*monkeypatches*](https://github.com/stringparser/stdout-monkey) `stdout` in order feed from its data.
+NOTE: the package is devised to work hand in hand with `process.stdout.write`. That is, the package [*monkeypatches*](https://github.com/stringparser/stdout-monkey) `stdout` in order to feed from its data.
 
 Though it would need some changes as it is, it should work with any other function call. With a prior patch, that is.
 
