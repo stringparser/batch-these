@@ -85,7 +85,7 @@ function batchWait(_wait){
   return exports;
 }
 
-// exports.wait
+// exports.origin
 function batchOrigin(_origin){
 
   if( _origin === void 0){
