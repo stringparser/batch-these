@@ -6,15 +6,23 @@ var type = require('utils-type');
 var monkey = require('stdout-monkey')();
 var track = require('callsite-tracker');
 
-exports = module.exports = { };
+var debug = require('./lib/debug');
+var write = require('./lib/write');
 
-var util = require('./lib/util');
-var write = util.write;
-var debug = util.debug;
-
+var wait = 0;
 var batch = { };
-var wait = 0, origin = console.log;
+var origin = console.log;
 
+// it can happen
+process.once('exit', function(){
+  var sink;
+  if(batch.data){
+    sink = !debug.DEBUG || console.log('exit', batch);
+    write(batch, monkey);
+  }
+});
+
+// exports.these
 function batchThese(str, callback){
 
   callback = type(callback).function;
@@ -45,7 +53,7 @@ function batchThese(str, callback){
   } else {
 
     debug('direct write', batch);
-    write(batch, monkey);
+    write(batch, monkey, debug);
     batch = {
         module : caller.module,
       location : caller.location,
@@ -66,26 +74,35 @@ function batchThese(str, callback){
   return exports;
 }
 
+// exports.wait
+function batchWait(_wait){
+
+  if( _wait === void 0){
+    return wait;
+  }
+  wait = type( Math.abs(_wait) ).integer || 0;
+
+  return exports;
+}
+
+// exports.wait
+function batchOrigin(_origin){
+
+  if( _origin === void 0){
+    return origin;
+  }
+
+  origin = type(_origin).function || console.log;
+  return exports;
+}
+
 // patch stdout with the batched version
 monkey.patch(batchThese);
 
-// it can happen
-process.once('exit', function(){
-  var sink;
-  if(batch.data){
-    sink = ! debug.debug || console.log('exit', batch);
-    write(batch, monkey);
-  }
-});
-
-exports.these = batchThese;
-
-exports.origin = function (_origin){
-  origin = type(_origin).function || console.log;
-  return exports;
-};
-
-exports.wait = function(_wait){
-  wait = type( Math.abs(_wait) ).integer || 0;
-  return exports;
+// It would make more sense to have a class
+// for `stdout` is kind of weird somehow
+module.exports = {
+    wait : batchWait,
+   these : batchThese,
+  origin : batchOrigin
 };
