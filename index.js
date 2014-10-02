@@ -6,12 +6,14 @@ var type = require('utils-type');
 var monkey = require('stdout-monkey')();
 var track = require('callsite-tracker');
 
+var batch = { };
+var wait = require('./lib/wait');
+var store = require('./lib/store');
+var origin = require('./lib/origin');
+var filter = require('./lib/filter');
+
 var debug = require('./lib/debug');
 var write = require('./lib/write');
-
-var wait = 0;
-var batch = { };
-var origin = console.log;
 
 // it can happen
 process.once('exit', function(){
@@ -23,11 +25,12 @@ process.once('exit', function(){
 });
 
 // exports.these
-function batchThese(str, callback){
+function these(chunk, callback){
 
   callback = type(callback).function;
-  var caller = track(callback ? batchThese : origin);
+  var caller = track(callback ? these : origin() );
 
+  batch.path = batch.path || caller.path;
   batch.module = batch.module || caller.module;
   batch.location = batch.location || caller.location;
 
@@ -37,17 +40,17 @@ function batchThese(str, callback){
   }
 
   var waiting = callback
-     ? batch.location === caller.location
+     ? filter(batch, caller)
      : batch.module === caller.module;
 
   if( waiting ){
 
-    batch.data = batch.data || [];
+    store(batch, chunk);
+    batch.path = caller.path;
     batch.module = caller.module;
     batch.location = caller.location;
     batch.handle = callback;
 
-    batch.data.push(str);
     debug('waiting...', batch);
 
   } else {
@@ -55,11 +58,12 @@ function batchThese(str, callback){
     debug('direct write', batch);
     write(batch, monkey, debug);
     batch = {
+          path : caller.path,
         module : caller.module,
       location : caller.location,
-        handle : callback,
-          data : [str]
+        handle : callback
     };
+    store(batch, chunk);
   }
 
   // keep a timer anyway
@@ -69,40 +73,20 @@ function batchThese(str, callback){
       write(batch, monkey);
       batch = { };
     }
-  }, wait);
+  }, wait() );
 
-  return exports;
-}
-
-// exports.wait
-function batchWait(_wait){
-
-  if( _wait === void 0){
-    return wait;
-  }
-  wait = type( Math.abs(_wait) ).integer || 0;
-
-  return exports;
-}
-
-// exports.origin
-function batchOrigin(_origin){
-
-  if( _origin === void 0){
-    return origin;
-  }
-
-  origin = type(_origin).function || console.log;
   return exports;
 }
 
 // patch stdout with the batched version
-monkey.patch(batchThese);
+monkey.patch(these);
 
 // It would make more sense to have a class
-// for `stdout` is kind of weird somehow
+// but for `stdout`... is kind of weird somehow
 module.exports = {
-    wait : batchWait,
-   these : batchThese,
-  origin : batchOrigin
+    wait : wait,
+  origin : origin,
+  filter : filter,
+   these : these,
+   store : store,
 };
