@@ -3,7 +3,7 @@
 [<img alt="build" src="http://img.shields.io/travis/stringparser/batch-these/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/batch-these/builds)
 [<img alt="NPM version" src="http://img.shields.io/npm/v/batch-these.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/batch-these)
 <br><br>
-batch chunk with ease
+batch data with ease
 <br>
 
 ## install
@@ -74,17 +74,13 @@ Done with Mr. Orange in 44 ms
 `chunk`
   type: none | default: none
 
-Chunk to be accumulated in `batch.data`.
-
-`callback`
-  type: function | default: none
+Data to be accumulated.
 
 `function` to pass the data when the time comes.
-By default the `data` is an array.
 
 #### batch.store([callback])
 
-How to store your chunks given a callback. This is the default
+How to store your chunks. This is the default
 
 ```js
 function batchStore(batch, chunk){
@@ -92,13 +88,12 @@ function batchStore(batch, chunk){
   batch.data.push(chunk);
 };
 ```
-the batch `data` property is passed as the first argument to the `batch.these` callback.
 
 `batch.store()` returns the current `storer`.
 
 #### batch.filter([callback])
 
-`callback` decides how the chunks are accumulated. The default is
+Decides how the chunks are accumulated. The default is
 
 ```js
 function batchFilter(batch, caller){
@@ -106,29 +101,22 @@ function batchFilter(batch, caller){
 };
 ```
 
-`caller` an object with these properties
-  - path
-  - location
-  - module
-  - scope
-
-`batch` an object with `caller` properties plus
-  - data
-  - handle
-  - timer
+Where location has the stack format
+ `filename:lineNumber:columNumber`
 
 `batch.filter()` returns the current filter.
 
 #### batch.wait([ms])
-`ms`
-  type: `number` | default: `0` miliseconds
+ms
+
+type: `number` | default: `0` miliseconds
 
 Time in `ms` to wait in between batches.
 
 #### batch.origin([handle])
+handle
 
-`handle`
-  type: `function` | default: `console.log`
+type: `function` | default: `console.log`
 
 Function to track down for the batches.
 
