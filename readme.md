@@ -3,7 +3,7 @@
 [<img alt="build" src="http://img.shields.io/travis/stringparser/batch-these/master.svg?style=flat-square" align="left"/>](https://travis-ci.org/stringparser/batch-these/builds)
 [<img alt="NPM version" src="http://img.shields.io/npm/v/batch-these.svg?style=flat-square" align="right"/>](http://www.npmjs.org/package/batch-these)
 <br><br>
-batch data with ease
+batch chunk with ease
 <br>
 
 ## install
@@ -14,19 +14,19 @@ batch data with ease
 
 ```js
 var batch = require('batch-these');
-    batch.wait(10);
+    batch.wait(10); // 10 miliseconds
 
 process.on('stuff-started', function(e){
-  var data = e.name;
-  batch.these(data, function(batch){
-    console.log('Started ', batch.join(', ') );
+  var chunk = e.name;
+  batch.these(chunk, function(data){
+    console.log('Started ', data.join(', ') );
   });
 });
 
 process.on('stuff-done', function(e){
-  var data = e.name + ' in ' + Math.floor(e.time) + ' ms';
-  batch.these(data, function(batch){
-    console.log('Done with Mr.', batch.join(', Mr. ') );
+  var chunk = e.name + ' in ' + Math.floor(e.time) + ' ms';
+  batch.these(chunk, function(data){
+    console.log('Done with Mr.', data.join(', Mr. ') );
   });
 });
 
@@ -69,38 +69,72 @@ Done with Mr. Orange in 44 ms
 
 `var batch = require('batch-these')`
 
-#### batch.these(data, [callback])
+#### batch.these(chunk, callback)
+
+`chunk`
+  type: none | default: none
+
+Chunk to be accumulated in `batch.data`.
 
 `callback`
-  - type: function  
-  - default: none
+  type: function | default: none
 
-`data`
-  - type: none
+`function` to pass the data when the time comes.
+By default the `data` is an array.
 
-  The data to be data.
+#### batch.store([callback])
 
-  It will be passed to the `callback` when the time comes as an `array`.
+How to store your chunks given a callback. This is the default
+
+```js
+function batchStore(batch, chunk){
+  batch.data = batch.data || [ ];
+  batch.data.push(chunk);
+};
+```
+the batch `data` property is passed as the first argument to the `batch.these` callback.
+
+`batch.store()` returns the current `storer`.
+
+#### batch.filter([callback])
+
+`callback` decides how the chunks are accumulated. The default is
+
+```js
+function batchFilter(batch, caller){
+  return batch.location === caller.location;
+};
+```
+
+`caller` an object with these properties
+  - path
+  - location
+  - module
+  - scope
+
+`batch` an object with `caller` properties plus
+  - data
+  - handle
+  - timer
+
+`batch.filter()` returns the current filter.
 
 #### batch.wait([ms])
-
-ms
- - type: `number`
- - default: `0` miliseconds
+`ms`
+  type: `number` | default: `0` miliseconds
 
 Time in `ms` to wait in between batches.
 
 #### batch.origin([handle])
 
-handle
- - type: `function`
- - default: `console.log`
+`handle`
+  type: `function` | default: `console.log`
 
-Function to track down for the batches. Internally is using [callsite-tracker](https://github.com/stringparser/callsite-tracker) to get only one stack trace frame keeping the overhead to a minimum.
+Function to track down for the batches.
 
 ### how it works
 
-The module uses 1 *stacktrace* frame to figure out *the exact location* of the `callback`. Based on that, a batch is stored. For each *location* a batch will kept waiting for new data input using a timer.
+Internally is using [callers-module](https://github.com/stringparser/callers-module) to get only 1 *stacktrace* frame. With that frame one can figure out *the exact location* of the `callback`. Based on that, a batch is stored. For each *location* a batch will kept waiting for a new chunk using a timer. Thats it.
 
 The time to be waiting is set with `batch.wait([ms])` time.
 

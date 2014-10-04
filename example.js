@@ -4,15 +4,15 @@ var batch = require('./.');
     batch.wait(10);
 
 process.on('stuff-started', function(e){
-  var data = e.name;
-  batch.these(data, function(batch){
+  var chunk = e.name;
+  batch.these(chunk, function(data){
     console.log('Started ', batch.join(', ') );
   });
 });
 
 process.on('stuff-done', function(e){
-  var data = e.name + ' in ' + Math.floor(e.time) + ' ms';
-  batch.these(data, function(batch){
+  var chunk = e.name + ' in ' + Math.floor(e.time) + ' ms';
+  batch.these(chunk, function(data){
     console.log('Done with Mr.', batch.join(', Mr. ') );
   });
 });

@@ -93,5 +93,5 @@ module.exports = {
   origin : origin,
   filter : filter,
    these : these,
-   store : store,
+   store : store
 };
