@@ -1,6 +1,6 @@
 {
   "name": "batch-these",
-  "version": "0.7.15",
+  "version": "0.7.16",
   "description": "batch with ease",
   "main": "index.js",
   "engines": {
@@ -35,6 +35,6 @@
   },
   "scripts": {
     "lint": "jshint lib test index.js --reporter node_modules/jshint-stylish/stylish.js --exclude node_modules",
-    "test": "npm run-script lint && mocha --reporter spec"
+    "test": "npm run-script lint && mocha --reporter spec test/_main.js"
   }
 }
