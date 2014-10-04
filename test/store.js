@@ -3,20 +3,12 @@
 var should = require('should');
 var batch = require('../.');
 
-var store = batch.store();
-var filter = batch.filter();
-
 module.exports = function(){
 
   beforeEach(function(){
     batch.store(function(batch, chunk){
       batch.data = (batch.data || []).concat(chunk.split(/[ ]+/));
     });
-  });
-
-  afterEach(function(){
-    batch.filter(filter);
-    batch.store(store);
   });
 
   it('should hook the way data is stored', function (done){
@@ -43,7 +35,7 @@ module.exports = function(){
       return caller.path === batch.path;
     });
 
-    batch.these(input, function(){ });
+    batch.these(input, function(){});
     batch.these('thing', function(){
       should(this.data).eql(['yet', 'another', 'thing']);
       done();

@@ -45,12 +45,10 @@ function these(chunk, callback){
 
   if( waiting ){
 
-    store(batch, chunk);
     batch.path = caller.path;
     batch.module = caller.module;
     batch.location = caller.location;
     batch.handle = callback;
-
     debug('waiting...', batch);
 
   } else {
@@ -63,7 +61,14 @@ function these(chunk, callback){
       location : caller.location,
         handle : callback
     };
+  }
+
+  // so callbacks can store data differently
+  if( callback ){
     store(batch, chunk);
+  } else {
+    batch.data = batch.data || [ ];
+    batch.data.push(chunk);
   }
 
   // keep a timer anyway
@@ -73,7 +78,7 @@ function these(chunk, callback){
       write(batch, monkey);
       batch = { };
     }
-  }, wait() );
+  }, wait());
 
   return exports;
 }

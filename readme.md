@@ -14,26 +14,23 @@ batch data with ease
 
 ```js
 var batch = require('batch-these');
-    batch.wait(12);
+    batch.wait(10);
 
 process.on('stuff-started', function(e){
-  var batched = e.name;
-  batch.these(batched, function(batch){
+  var data = e.name;
+  batch.these(data, function(batch){
     console.log('Started ', batch.join(', ') );
   });
 });
 
 process.on('stuff-done', function(e){
-  var batched = e.name + ' in ' + Math.floor(e.time) + ' ms';
-  batch.these(batched, function(batch){
+  var data = e.name + ' in ' + Math.floor(e.time) + ' ms';
+  batch.these(data, function(batch){
     console.log('Done with Mr.', batch.join(', Mr. ') );
   });
 });
 
-var dogs = [
-  'Blue', 'Pink', 'Eddie', 'Joe',
-  'White','Brown', 'Blonde','Orange'
-];
+var dogs = ['Blue', 'Pink', 'Eddie', 'Joe','White','Brown', 'Blonde','Orange'];
 
 dogs.forEach(function(name, index){
   var time = process.hrtime();
@@ -58,13 +55,14 @@ which will output something similar to
 
 ```
 Started  Blue, Pink, Eddie, Joe, White
-Done with Mr. Pink in 51 ms
-Started  Brown, Blonde
-Done with Mr. Blue in 76 ms
+Done with Mr. Pink in 31 ms
+Started  Brown
+Done with Mr. Joe in 20 ms, Mr. Brown in 3 ms, Mr. Eddie in 37 ms, Mr. Blue in 59 ms
+Started  Blonde
+Done with Mr. White in 20 ms
 Started  Orange
-Done with Mr. Brown in 89 ms, Mr. Blonde in 96 ms
-Done with Mr. Eddie in 112 ms, Mr. Joe in 112 ms, Mr. White in 118 ms
-Done with Mr. Orange in 179 ms
+Done with Mr. Blonde in 15 ms
+Done with Mr. Orange in 44 ms
 ```
 
 ### documentation
@@ -80,7 +78,7 @@ Done with Mr. Orange in 179 ms
 `data`
   - type: none
 
-  The data to be batched.
+  The data to be data.
 
   It will be passed to the `callback` when the time comes as an `array`.
 

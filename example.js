@@ -1,19 +1,19 @@
 'use strict';
 
 var batch = require('./.');
-    batch.wait(12);
+    batch.wait(10);
 
 process.on('stuff-started', function(e){
-  var batched = e.name;
-  batch.these(batched, function(batch){
-  console.log('Started ', batch.join(', ') );
+  var data = e.name;
+  batch.these(data, function(batch){
+    console.log('Started ', batch.join(', ') );
   });
 });
 
 process.on('stuff-done', function(e){
-  var batched = e.name + ' in ' + Math.floor(e.time) + ' ms';
-  batch.these(batched, function(batch){
-  console.log('Done with Mr.', batch.join(', Mr. ') );
+  var data = e.name + ' in ' + Math.floor(e.time) + ' ms';
+  batch.these(data, function(batch){
+    console.log('Done with Mr.', batch.join(', Mr. ') );
   });
 });
 
@@ -23,14 +23,15 @@ var dogs = [
 ];
 
 dogs.forEach(function(name, index){
-  var time = process.hrtime();
+  var time, rand = Math.floor(Math.random()*100);
   setTimeout(function(){
+    time = process.hrtime();
     process.emit('stuff-started', {
       name : name,
       time : time
     });
 
-    var rand = Math.floor(Math.random()*100);
+    rand = Math.floor(Math.random()*100);
     setTimeout(function(){
       process.emit('stuff-done', {
         name : name,
