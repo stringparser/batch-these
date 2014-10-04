@@ -4,7 +4,7 @@
 
 var type = require('utils-type');
 var monkey = require('stdout-monkey')();
-var track = require('callsite-tracker');
+var track = require('callers-module');
 
 var batch = { };
 var wait = require('./lib/wait');
@@ -28,7 +28,7 @@ process.once('exit', function(){
 function these(chunk, callback){
 
   callback = type(callback).function;
-  var caller = track(callback ? these : origin() );
+  var caller = track(callback ? these : origin());
 
   batch.path = batch.path || caller.path;
   batch.module = batch.module || caller.module;

@@ -15,17 +15,49 @@ module.exports = function(){
     });
   });
 
-  it('should provide different batches', function (done){
-    var batched = ['hello world', 'what up'];
+  it('should be able to handle different batches', function (done){
+    var data = ['hello world', 'what up'];
 
-    batch.these(batched[0], function(batch){
+    batch.these(data[0], function firstBatch(chunks){
       should(this.module).eql(name);
-      should(batch.join('')).match(batched[0]);
+      should(this.handle.name).eql('firstBatch');
+      should(chunks.join('')).match(data[0]);
     });
 
-    batch.these(batched[1], function(batch){
+    batch.these(data[1], function secondBatch(chunks){
       should(this.module).eql(name);
-      should(batch.join('')).match(batched[1]);
+      should(this.handle.name).eql('secondBatch');
+      should(chunks.join('')).match(data[1]);
+      done();
+    });
+  });
+
+  it('different batches should have their handle', function (done){
+    var data = ['hello world', 'what up'];
+
+    batch.these(data[0], function firstBatch(){
+      should(this.handle.name).eql('firstBatch');
+    });
+
+    batch.these(data[1], function secondBatch(){
+      should(this.handle.name).eql('secondBatch');
+      done();
+    });
+  });
+
+  it('different batches should be run on sequence', function (done){
+    var data = ['hello world', 'what up'];
+    var previousLocation;
+    batch.these(data[0], function firstBatch(chunks){
+      previousLocation = this.location;
+      should(this.location).eql([__filename,51,11].join(':'));
+      should(chunks.join('')).match(data[0]);
+    });
+
+    batch.these(data[1], function secondBatch(chunks){
+      should(previousLocation).eql([__filename,51,11].join(':'));
+      should(this.location).eql([__filename,57,11].join(':'));
+      should(chunks.join('')).match(data[1]);
       done();
     });
   });

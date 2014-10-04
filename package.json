@@ -29,7 +29,7 @@
     "should": "*"
   },
   "dependencies": {
-    "callsite-tracker": "^1.0.16",
+    "callers-module": "^0.9.8",
     "stdout-monkey": "^1.0.20",
     "utils-type": "^0.1.33"
   },
