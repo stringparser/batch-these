@@ -29,9 +29,9 @@
     "should": "*"
   },
   "dependencies": {
-    "callers-module": "^0.9.8",
-    "stdout-monkey": "^1.0.20",
-    "utils-type": "^0.1.33"
+    "callers-module": "^0.9.14",
+    "stdout-monkey": "^1.1.0",
+    "utils-type": "^0.5.2"
   },
   "scripts": {
     "lint": "jshint lib test index.js --reporter node_modules/jshint-stylish/stylish.js --exclude node_modules",
