@@ -1,6 +1,6 @@
 {
   "name": "batch-these",
-  "version": "0.7.22",
+  "version": "0.8.0",
   "description": "batch with ease",
   "main": "index.js",
   "engines": {
